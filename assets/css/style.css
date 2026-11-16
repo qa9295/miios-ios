@@ -1,0 +1,159 @@
+* { box-sizing: border-box; }
+:root { font-family: Inter, ui-sans-serif, system-ui, -apple-system, sans-serif; color: #302c49; }
+body {
+  margin: 0; min-height: 100vh; display: grid; place-items: center; padding: 12px;
+  background: radial-gradient(circle at 15% 15%, #fff 0, transparent 35%), linear-gradient(135deg,#eaf4ff,#e5d8ff 55%,#f4d9f5);
+}
+.device {
+  width: min(100%, 430px); height: 566px; min-height: 0; position: relative; overflow: hidden;
+  border: 8px solid #fff; border-radius: 34px; padding: 22px;
+  background: rgba(255,255,255,.58); box-shadow: 0 24px 70px #55447a33; backdrop-filter: blur(16px);
+}
+.status { display:flex; justify-content:space-between; font-size:13px; font-weight:800; color:#6c638a; }
+.welcome { margin: 40px 4px 28px; }
+.eyebrow { font-size:10px; letter-spacing:.18em; font-weight:800; color:#8c7cac; }
+h1 { font-size:48px; line-height:1; margin:12px 0; letter-spacing:-.06em; }
+.muted { color:#77718d; }
+.apps { display:grid; grid-template-columns:repeat(3,1fr); gap:22px 12px; }
+.app {
+  min-height:91px; border:0; background:rgba(255,255,255,.72); border-radius:22px;
+  padding:17px 5px 13px; color:inherit; display:grid; justify-items:center; align-content:center;
+  gap:9px; cursor:pointer; box-shadow:0 7px 18px #66548a12; transition:transform .12s ease, box-shadow .12s ease;
+}
+.app span { font-size:29px; line-height:1; }
+.app b { font-size:11px; }
+.app:active { transform:scale(.96); }
+footer { position:absolute; bottom:28px; left:0; right:0; text-align:center; color:#8c83a5; font-size:11px; }
+#secret { position:absolute; right:10px; bottom:7px; border:0; background:transparent; opacity:.12; font-size:19px; cursor:pointer; }
+#secret:focus-visible { opacity:.8; outline:2px solid #8f78bd; border-radius:8px; }
+#toast {
+  position:absolute; z-index:5; left:18px; right:18px; bottom:62px; padding:13px 16px; text-align:center;
+  background:#40365d; color:white; border-radius:14px; font-size:13px; opacity:0; transform:translateY(8px);
+  transition:.2s; pointer-events:none;
+}
+#toast.show { opacity:1; transform:translateY(0); }
+.app-window {
+  display:none; position:absolute; z-index:4; inset:12px; padding:15px; border:1px solid #fff;
+  border-radius:25px; background:rgba(250,248,255,.97); box-shadow:0 12px 38px #40365d30;
+}
+.app-window.open { display:flex; flex-direction:column; }
+.window-header { display:flex; align-items:center; justify-content:space-between; padding-bottom:12px; color:#51456f; border-bottom:1px solid #e8e0f2; }
+.close-button { border:0; border-radius:50%; width:30px; height:30px; background:#eee7f8; color:#51456f; font-size:22px; line-height:1; cursor:pointer; }
+.window-content { min-height:0; overflow:auto; padding-top:14px; flex:1; }
+.panel-button { border:0; border-radius:13px; padding:11px 15px; background:#8d79b8; color:white; font-weight:700; cursor:pointer; }
+.panel-button:disabled { opacity:.5; cursor:not-allowed; }
+.camera-video { width:100%; aspect-ratio:4/3; object-fit:cover; border-radius:17px; background:#292438; }
+.camera-actions { display:flex; gap:9px; flex-wrap:wrap; margin-top:12px; }
+.hint { color:#77718d; font-size:12px; line-height:1.5; }
+.gallery-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; }
+.photo-card { background:#fff; border-radius:14px; padding:7px; box-shadow:0 5px 14px #66548a12; }
+.photo-card img { display:block; width:100%; aspect-ratio:1; object-fit:cover; border-radius:9px; }
+.photo-card button { margin-top:7px; width:100%; border:0; border-radius:9px; padding:7px; background:#f2eaf8; color:#594b75; cursor:pointer; }
+.empty-gallery { padding:28px 12px; text-align:center; color:#827895; background:#f4eff9; border-radius:15px; }
+@media (max-width: 460px) {
+  body { padding:8px; }
+  .device { width:min(100%,430px); height:min(566px, calc(100vh - 16px)); }
+  .welcome { margin-top:36px; }
+}
+@media (max-height: 600px) and (min-width: 461px) {
+  .device { transform:scale(.92); }
+}
+
+/* Settings app controls */
+.settings-section { padding:4px 0 16px; margin-bottom:14px; border-bottom:1px solid #e8e0f2; }
+.settings-section h3 { margin:0 0 7px; font-size:15px; }
+.theme-options { display:grid; grid-template-columns:repeat(3,1fr); gap:9px; margin-top:12px; }
+.theme-option { display:grid; gap:6px; justify-items:center; padding:8px 5px; border:1px solid #e7def1; border-radius:13px; cursor:pointer; font-size:12px; }
+.theme-option input { accent-color:#8d79b8; }
+.theme-preview { display:block; width:100%; height:42px; border-radius:8px; }
+.pastel-preview { background:linear-gradient(135deg,#c9e8ff,#e6d8ff,#ffdff0); }
+.dark-preview { background:linear-gradient(135deg,#25243a,#38334f,#1e293b); }
+.mint-preview { background:linear-gradient(135deg,#c8f2e4,#d9f3ed,#e4f5c9); }
+.setting-row, .toggle-row { display:flex; align-items:center; justify-content:space-between; gap:12px; }
+.setting-row { margin:12px 0 7px; font-size:13px; }
+.toggle-row { font-size:13px; padding:5px 0; }
+.toggle-row input { width:18px; height:18px; accent-color:#8d79b8; }
+.settings-range { width:100%; accent-color:#8d79b8; }
+.settings-actions { display:flex; flex-wrap:wrap; gap:9px; }
+.secondary-button { border:0; border-radius:13px; padding:11px 15px; background:#eee7f8; color:#594b75; font-weight:700; cursor:pointer; }
+.settings-note { margin-top:13px; }
+
+/* Alternate themes activate only after the user chooses them in Settings.
+   The default Pastel theme keeps the original home-screen design. */
+:root[data-theme="dark"] body { background:radial-gradient(circle at 15% 15%, #55506b 0, transparent 35%), linear-gradient(135deg,#25243a,#38334f 55%,#1e293b); }
+:root[data-theme="dark"] .device { background:rgba(37,34,55,.9); color:#f1edff; }
+:root[data-theme="dark"] .status, :root[data-theme="dark"] .muted, :root[data-theme="dark"] footer { color:#c2b9dc; }
+:root[data-theme="dark"] .app { background:rgba(255,255,255,.12); color:#f1edff; }
+:root[data-theme="dark"] .app-window { background:rgba(42,38,61,.98); border-color:#655b80; color:#f1edff; }
+:root[data-theme="dark"] .window-header { color:#f1edff; border-color:#5b5274; }
+:root[data-theme="dark"] .hint { color:#c2b9dc; }
+:root[data-theme="dark"] .empty-gallery { background:#373149; color:#e2daf5; }
+:root[data-theme="dark"] .close-button { background:#554b70; color:#fff; }
+:root[data-theme="dark"] .settings-section, :root[data-theme="dark"] .theme-option { border-color:#5b5274; }
+:root[data-theme="dark"] .secondary-button { background:#554b70; color:#fff; }
+
+:root[data-theme="mint"] body { background:radial-gradient(circle at 15% 15%, #fff 0, transparent 35%), linear-gradient(135deg,#c8f2e4,#d9f3ed 55%,#e4f5c9); }
+:root[data-theme="mint"] .device { background:rgba(255,255,255,.68); color:#28483f; }
+
+
+/* MiiOS Music — app-only styles; the HOME layout remains unchanged. */
+.music-player { text-align:center; padding:2px 0 14px; }
+.music-art { width:116px; height:116px; margin:0 auto 12px; display:grid; place-items:center; border-radius:25px; background:linear-gradient(135deg,#c9e8ff,#e6d8ff,#ffdff0); color:#766494; font-size:54px; box-shadow:0 8px 22px #66548a18; }
+.music-now-label { font-size:9px; letter-spacing:.16em; margin:4px 0; }
+.music-track-title { display:block; font-size:14px; overflow-wrap:anywhere; }
+.music-progress-row { display:flex; align-items:center; gap:8px; margin:14px 0 8px; font-size:10px; color:#827895; }
+.music-progress-row input { flex:1; min-width:0; accent-color:#8d79b8; }
+.music-controls { display:flex; justify-content:center; align-items:center; gap:20px; }
+.music-control { border:0; background:#eee7f8; color:#594b75; border-radius:50%; width:40px; height:40px; font-size:16px; cursor:pointer; }
+.music-control.main { width:50px; height:50px; background:#8d79b8; color:#fff; font-size:20px; }
+.music-volume { display:flex; align-items:center; justify-content:center; gap:10px; margin:12px auto; font-size:11px; color:#77718d; }
+.music-volume input { width:45%; accent-color:#8d79b8; }
+.music-import { display:inline-block; cursor:pointer; }
+.music-list-heading { display:flex; justify-content:space-between; align-items:center; margin:5px 0 8px; font-size:13px; }
+.music-list-heading span { color:#9187a4; font-size:11px; }
+.music-playlist { display:grid; gap:6px; margin-bottom:12px; }
+.music-track { display:flex; align-items:center; gap:10px; width:100%; border:0; border-radius:11px; padding:10px; text-align:left; background:#f4eff9; color:#594b75; cursor:pointer; font-size:12px; overflow-wrap:anywhere; }
+.music-track.selected { background:#e7ddf4; font-weight:700; }
+#musicMiniDock { display:none; position:absolute; z-index:3; left:18px; right:18px; bottom:14px; min-height:38px; align-items:center; gap:8px; padding:6px 8px 6px 12px; border-radius:13px; background:rgba(255,255,255,.94); box-shadow:0 5px 18px #40365d22; color:#594b75; font-size:11px; }
+#musicMiniDock.visible { display:flex; }
+#musicDockTitle { flex:1; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; }
+.music-dock-note { font-size:17px; }
+#musicDockToggle { border:0; border-radius:50%; width:27px; height:27px; background:#8d79b8; color:white; cursor:pointer; }
+:root[data-theme="dark"] .music-track { background:#373149; color:#e2daf5; }
+:root[data-theme="dark"] .music-track.selected { background:#554b70; }
+:root[data-theme="dark"] #musicMiniDock { background:#373149; color:#f1edff; }
+
+
+/* iOS / PWA adaptation: preserve the original MiiOS HOME design. */
+html { min-height: 100%; -webkit-text-size-adjust: 100%; }
+body {
+  min-height: 100vh;
+  min-height: 100svh;
+  padding-top: max(8px, env(safe-area-inset-top));
+  padding-right: max(8px, env(safe-area-inset-right));
+  padding-bottom: max(8px, env(safe-area-inset-bottom));
+  padding-left: max(8px, env(safe-area-inset-left));
+  overscroll-behavior: none;
+}
+button, input, label { -webkit-tap-highlight-color: transparent; }
+button { touch-action: manipulation; }
+.device {
+  height: min(700px, calc(100svh - env(safe-area-inset-top) - env(safe-area-inset-bottom) - 16px));
+  min-height: 540px;
+}
+.app-window { padding-bottom: max(15px, env(safe-area-inset-bottom)); }
+.window-content { overscroll-behavior: contain; -webkit-overflow-scrolling: touch; }
+.camera-video { transform: translateZ(0); }
+@media (max-width: 460px) {
+  .device {
+    height: min(700px, calc(100svh - env(safe-area-inset-top) - env(safe-area-inset-bottom) - 16px));
+    min-height: min(540px, calc(100svh - 16px));
+    padding: 20px;
+  }
+  .welcome { margin-top: clamp(25px, 6svh, 42px); }
+  .apps { gap: clamp(12px, 3svh, 22px) 10px; }
+  .app { min-height: clamp(76px, 12svh, 91px); }
+}
+@media (display-mode: standalone) {
+  body { min-height: 100svh; }
+}

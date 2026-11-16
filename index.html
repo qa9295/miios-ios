@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#e5d8ff">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="MiiOS">
+  <meta name="mobile-web-app-capable" content="yes">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
+  <link rel="icon" type="image/png" href="assets/icons/icon-192.png">
+  <title>MiiOS</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+  <main class="device">
+    <header class="status"><span>MiiOS</span><span id="clock">--:--</span></header>
+
+    <section class="welcome">
+      <p class="eyebrow">YOUR LITTLE DIGITAL WORLD</p>
+      <h1>Hello!</h1>
+      <p class="muted">Welcome back to MiiOS.</p>
+    </section>
+
+    <section class="apps" aria-label="Applications">
+      <button class="app" data-app="Mii Plaza"><span>🙂</span><b>Mii Plaza</b></button>
+      <button class="app" data-app="Games"><span>🎮</span><b>Games</b></button>
+      <button class="app" data-app="Camera"><span>📷</span><b>Camera</b></button>
+      <button class="app" data-app="Gallery"><span>🖼️</span><b>Gallery</b></button>
+      <button class="app" data-app="Music"><span>🎵</span><b>Music</b></button>
+      <button class="app" data-app="Settings"><span>⚙️</span><b>Settings</b></button>
+    </section>
+
+    <footer>Make Every Moment Yours.</footer>
+    <button id="secret" aria-label="Secret Easter egg" title="">🐾</button>
+    <div id="toast" role="status" aria-live="polite"></div>
+
+    <section id="appWindow" class="app-window" aria-hidden="true">
+      <header class="window-header">
+        <strong id="windowTitle">App</strong>
+        <button id="closeWindow" class="close-button" aria-label="Close">×</button>
+      </header>
+      <div id="windowContent" class="window-content"></div>
+    </section>
+  </main>
+
+  <audio id="jaxAudio" preload="none" src="assets/audio/jax-01.mp3"></audio>
+  <script src="assets/js/app.js"></script>
+  <script>if ("serviceWorker" in navigator) window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js").catch(() => {}));</script>
+</body>
+</html>
